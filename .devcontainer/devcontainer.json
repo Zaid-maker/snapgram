@@ -6,7 +6,7 @@
   "updateContentCommand": "npm ci",
   "postCreateCommand": "",
   "postAttachCommand": {
-    "open-port": "gh codespace ports visibility 3000:public -c $CODESPACE_NAME",
+    "open-port": "gh codespace ports visibility 5173:public -c $CODESPACE_NAME",
     "dev": "npm run dev"
   },
   "customizations": {
