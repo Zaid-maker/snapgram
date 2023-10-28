@@ -1,5 +1,19 @@
+import { Navigate, Outlet } from "react-router-dom";
+
 const AuthLayout = () => {
-  return <div>AuthLayout</div>;
+  const isConnected = false;
+
+  return (
+    <>
+      {isConnected ? (
+        <Navigate to="/" />
+      ) : (
+        <section>
+          <Outlet />
+        </section>
+      )}
+    </>
+  );
 };
 
 export default AuthLayout;
