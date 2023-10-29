@@ -13,8 +13,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SignupValidation } from "@/lib/validation";
+import Loader from "@/components/shared/Loader";
 
 const SignupForm = () => {
+  const isLoading = false;
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -43,7 +46,7 @@ const SignupForm = () => {
         </h2>
 
         <p className="text-light-3 small-medium md:base-regular mt-2">
-          To use snapgram enter your details
+          To use Snapgram, please enter your details
         </p>
 
         <form
@@ -103,7 +106,13 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            Submit
+            {isLoading ? (
+              <div className="flex-center gap-2">
+                <Loader /> Loading...
+              </div>
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </form>
       </div>
