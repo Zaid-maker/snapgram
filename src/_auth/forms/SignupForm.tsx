@@ -102,7 +102,9 @@ const SignupForm = () => {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="shad-button_primary">
+            Submit
+          </Button>
         </form>
       </div>
     </Form>
