@@ -11,6 +11,8 @@ export async function createUserAccount(user: INewUser) {
             user.name
         )
 
+        if (!newAccount) return Error
+
         return newAccount
     } catch (error) {
         console.log(error);
