@@ -14,11 +14,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { SignupValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
-import { Link } from "react-router-dom";
-import { createUserAccount } from "@/lib/appwrite/api";
+import { Link, useNavigate } from "react-router-dom";
+import { createUserAccount, signInAccount } from "@/lib/appwrite/api";
 import { useToast } from "@/components/ui/use-toast";
 
 const SignupForm = () => {
+  const navigate = useNavigate();
   const { toast } = useToast();
   const isLoading = false;
 
@@ -34,12 +35,25 @@ const SignupForm = () => {
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof SignupValidation>) {
+  async function onSubmit(user: z.infer<typeof SignupValidation>) {
     try {
-      const newUser = await createUserAccount(values);
+      const newUser = await createUserAccount(user);
 
       if (!newUser) {
         toast({ title: "Sign up failed. Please try again." });
+
+        return;
+      }
+
+      const session = await signInAccount({
+        email: user.name,
+        password: user.password,
+      });
+
+      if (!session) {
+        toast({ title: "Something went wrong. Please login your new account" });
+
+        navigate("/sign-in");
 
         return;
       }
