@@ -17,7 +17,7 @@ import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import { signInAccount } from "@/lib/appwrite/api";
 import { useToast } from "@/components/ui/use-toast";
-import { useCreateUserAccountMutations } from "@/lib/react-query/queriesAndMutations";
+import { useCreateUserAccount } from "@/lib/react-query/queriesAndMutations";
 
 const SignupForm = () => {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ const SignupForm = () => {
 
   // queries
   const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } =
-    useCreateUserAccountMutations();
+    useCreateUserAccount();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
