@@ -20,9 +20,11 @@ import {
   useCreateUserAccount,
   useSignInAccount,
 } from "@/lib/react-query/queries";
+import { useUserContext } from "@/context/AuthContext";
 
 const SignupForm = () => {
   const navigate = useNavigate();
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
   const { toast } = useToast();
 
   // queries
@@ -62,6 +64,18 @@ const SignupForm = () => {
         toast({ title: "Something went wrong. Please login your new account" });
 
         navigate("/sign-in");
+
+        return;
+      }
+
+      const isLoggedIn = await checkAuthUser();
+
+      if (isLoggedIn) {
+        form.reset();
+
+        navigate("/");
+      } else {
+        toast({ title: "Login failed. Please try again." });
 
         return;
       }
@@ -140,7 +154,7 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isCreatingAccount || isSigningInUser ? (
+            {isCreatingAccount || isSigningInUser || isUserLoading ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
