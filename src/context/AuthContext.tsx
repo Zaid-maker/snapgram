@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { getCurrentUser } from "@/lib/appwrite/api";
 import { IUser } from "@/types";
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const INITIAL_USER = {
@@ -91,3 +91,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+
+export const useUserContext = () => useContext(AuthContext);
