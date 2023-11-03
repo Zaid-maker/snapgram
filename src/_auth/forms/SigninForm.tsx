@@ -27,7 +27,6 @@ const SigninForm = () => {
   // queries
   const { mutateAsync: signInAccount, isLoading } = useSignInAccount();
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof SigninValidation>>({
     resolver: zodResolver(SigninValidation),
     defaultValues: {
@@ -36,7 +35,6 @@ const SigninForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(user: z.infer<typeof SigninValidation>) {
     const session = await signInAccount(user);
 

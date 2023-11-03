@@ -33,7 +33,6 @@ const SignupForm = () => {
   const { mutateAsync: signInAccount, isLoading: isSigningInUser } =
     useSignInAccount();
 
-  // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
@@ -44,7 +43,6 @@ const SignupForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
   async function onSubmit(user: z.infer<typeof SignupValidation>) {
     try {
       const newUser = await createUserAccount(user);
