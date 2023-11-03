@@ -78,7 +78,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     checkAuthUser();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const value = {
     user,
