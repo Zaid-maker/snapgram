@@ -12,14 +12,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SignupValidation } from "@/lib/validation";
+import { SigninValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  useCreateUserAccount,
-  useSignInAccount,
-} from "@/lib/react-query/queries";
+import { useSignInAccount } from "@/lib/react-query/queries";
 import { useUserContext } from "@/context/AuthContext";
 
 const SigninForm = () => {
@@ -28,59 +25,37 @@ const SigninForm = () => {
   const { toast } = useToast();
 
   // queries
-  const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } =
-    useCreateUserAccount();
-  const { mutateAsync: signInAccount, isLoading: isSigningInUser } =
-    useSignInAccount();
+  const { mutateAsync: signInAccount, isLoading } = useSignInAccount();
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof SignupValidation>>({
-    resolver: zodResolver(SignupValidation),
+  const form = useForm<z.infer<typeof SigninValidation>>({
+    resolver: zodResolver(SigninValidation),
     defaultValues: {
-      name: "",
-      username: "",
       email: "",
       password: "",
     },
   });
 
   // 2. Define a submit handler.
-  async function onSubmit(user: z.infer<typeof SignupValidation>) {
-    try {
-      const newUser = await createUserAccount(user);
+  async function onSubmit(user: z.infer<typeof SigninValidation>) {
+    const session = await signInAccount(user);
 
-      if (!newUser) {
-        toast({ title: "Sign up failed. Please try again." });
+    if (!session) {
+      toast({ title: "Login failed. Please try again." });
 
-        return;
-      }
+      return;
+    }
 
-      const session = await signInAccount({
-        email: user.name,
-        password: user.password,
-      });
+    const isLoggedIn = await checkAuthUser();
 
-      if (!session) {
-        toast({ title: "Something went wrong. Please login your new account" });
+    if (isLoggedIn) {
+      form.reset();
 
-        navigate("/sign-in");
+      navigate("/");
+    } else {
+      toast({ title: "Login failed. Please try again." });
 
-        return;
-      }
-
-      const isLoggedIn = await checkAuthUser();
-
-      if (isLoggedIn) {
-        form.reset();
-
-        navigate("/");
-      } else {
-        toast({ title: "Login failed. Please try again." });
-
-        return;
-      }
-    } catch (error) {
-      console.log({ error });
+      return;
     }
   }
 
@@ -90,11 +65,11 @@ const SigninForm = () => {
         <img src="/assets/images/logo.svg" alt="logo" />
 
         <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
-          Create a new Account
+          Log in to your account
         </h2>
 
         <p className="text-light-3 small-medium md:base-regular mt-2">
-          To use Snapgram, please enter your details
+          Welcome back! Please enter your details.
         </p>
 
         <form
@@ -103,38 +78,12 @@ const SigninForm = () => {
         >
           <FormField
             control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input type="text" className="shad-input" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input type="text" className="shad-input" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="shad-form_label">Email</FormLabel>
                 <FormControl>
-                  <Input type="email" className="shad-input" {...field} />
+                  <Input type="text" className="shad-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -145,7 +94,7 @@ const SigninForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="shad-form_label">Password</FormLabel>
                 <FormControl>
                   <Input type="password" className="shad-input" {...field} />
                 </FormControl>
@@ -154,21 +103,21 @@ const SigninForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isCreatingAccount || isSigningInUser || isUserLoading ? (
+            {isLoading || isUserLoading ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
             ) : (
-              "Sign Up"
+              "Log in"
             )}
           </Button>
           <p className="text-small-regular text-light-2 text-center mt-2">
-            Already have an account?
+            Don&apos;t have an account?
             <Link
-              to="/sign-in"
-              className="text-primary-500 text-small-semibold ml-2"
+              to="/sign-up"
+              className="text-primary-500 text-small-semibold ml-1"
             >
-              Log in
+              Sign up
             </Link>
           </p>
         </form>
