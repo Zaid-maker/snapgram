@@ -17,7 +17,7 @@ on:
         description: the head sha
         required: true
       base_ref:
-        description: the base ref 
+        description: the base ref
         required: true
       installation_id:
         description: the installation id
@@ -28,7 +28,7 @@ on:
       resolver_token:
         description: Optional resolver token for resolver service
         required: false
-        default: ''
+        default: ""
 
 jobs:
   gitStream:
