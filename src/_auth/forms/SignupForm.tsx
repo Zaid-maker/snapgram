@@ -66,17 +66,17 @@ const SignupForm = () => {
         return;
       }
 
-      const isLoggedIn = await checkAuthUser();
+      //const isLoggedIn = await checkAuthUser();
 
-      if (isLoggedIn) {
-        form.reset();
+      //if (isLoggedIn) {
+      //  form.reset();
 
-        navigate("/");
-      } else {
-        toast({ title: "Login failed. Please try again." });
+      //  navigate("/");
+      //} else {
+      //  toast({ title: "Login failed. Please try again." });
 
-        return;
-      }
+      //  return;
+      //}
     } catch (error) {
       console.log({ error });
     }
