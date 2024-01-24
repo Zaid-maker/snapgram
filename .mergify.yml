@@ -6,3 +6,8 @@ pull_request_rules:
     actions:
       merge:
         method: merge
+
+queue_rules:
+  - name: default
+    queue_conditions:
+      - check-success=gitStream workflow automation
